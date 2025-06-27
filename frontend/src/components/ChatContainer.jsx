@@ -16,7 +16,7 @@ const ChatContainer = () => {
     subscribeToMessages,
     unsubscribeFromMessages,
   } = useChatStore();
-  const { authUser } = useAuthStore();
+  const { authUser, socket } = useAuthStore();
   const messageEndRef = useRef(null);
 
   useEffect(() => {
@@ -32,6 +32,24 @@ const ChatContainer = () => {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
+
+  useEffect(() => {
+    if (!messages || !selectedUser || !socket) return;
+
+    const unreadMessageIds = messages
+      .filter(
+        (msg) =>
+          msg.senderId === selectedUser._id &&
+          msg.status === "sent"
+      )
+      .map((msg) => msg._id);
+
+    if (unreadMessageIds.length > 0) {
+      socket.emit("read_message", {
+        messageIds: unreadMessageIds,
+      });
+    }
+  }, [messages, selectedUser, socket]);
 
   if (isMessagesLoading) {
     return (
@@ -80,6 +98,11 @@ const ChatContainer = () => {
                 />
               )}
               {message.text && <p>{message.text}</p>}
+              {message.senderId === authUser._id && (
+                <span className="text-[10px] text-right mt-1 opacity-70">
+                  {message.status === "read" ? "✔✔" : "✓"}
+                </span>
+              )}
             </div>
           </div>
         ))}
