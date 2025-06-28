@@ -27,7 +27,7 @@ const Sidebar = () => {
           <Users className="size-6" />
           <span className="font-medium hidden lg:block">Contacts</span>
         </div>
-        {/* TODO: Online filter toggle */}
+        
         <div className="mt-3 hidden lg:flex items-center gap-2">
           <label className="cursor-pointer flex items-center gap-2">
             <input
@@ -60,17 +60,23 @@ const Sidebar = () => {
                 className="size-12 object-cover rounded-full"
               />
               {onlineUsers.includes(user._id) && (
-                <span
-                  className="absolute bottom-0 right-0 size-3 bg-green-500 
-                  rounded-full ring-2 ring-zinc-900"
-                />
+                <span className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-zinc-900" />
               )}
             </div>
 
-            {/* User info - only visible on larger screens */}
-            <div className="hidden lg:block text-left min-w-0">
-              <div className="font-medium truncate">{user.fullName}</div>
-              <div className="text-sm text-zinc-400">
+            {/* User info + unread badge */}
+            <div className="hidden lg:flex flex-col justify-center flex-1 min-w-0">
+              <div className="flex items-center justify-between">
+                <span className="font-medium truncate">{user.fullName}</span>
+
+                {user.unreadCount > 0 && (
+                  <span className="bg-red-500 text-white text-xs font-semibold rounded-full px-2 py-0.5">
+                    {user.unreadCount > 99 ? "99+" : user.unreadCount}
+                  </span>
+                )}
+              </div>
+
+              <div className="text-sm text-zinc-400 text-left">
                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
               </div>
             </div>
