@@ -7,9 +7,27 @@ import { getReceiverSocketId, io } from "../lib/socket.js";
 export const getUsersForSidebar = async (req, res) => {
   try {
     const loggedInUserId = req.user._id;
-    const filteredUsers = await User.find({ _id: { $ne: loggedInUserId } }).select("-password");
 
-    res.status(200).json(filteredUsers);
+    const users = await User.find({ _id: { $ne: loggedInUserId } }).select("-password");
+
+    const usersWithUnread = await Promise.all(
+      users.map(async (user) => {
+        const messages = await Message.find({
+          senderId: user._id,
+          receiverId: loggedInUserId,
+          status: "sent",
+        })
+          .sort({ createdAt: -1 })
+          .limit(100);
+
+        return {
+          ...user.toObject(),
+          unreadCount: Math.min(messages.length, 99),
+        };
+      })
+    );
+
+    res.status(200).json(usersWithUnread);
   } catch (error) {
     console.error("Error in getUsersForSidebar: ", error.message);
     res.status(500).json({ error: "Internal server error" });
