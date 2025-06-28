@@ -77,13 +77,19 @@ export const useChatStore = create((set, get) => ({
   },
 
   setSelectedUser: (selectedUser) => {
-    set((state) => ({
-      selectedUser,
-      users: state.users.map((user) =>
-        user._id === selectedUser._id
-          ? { ...user, unreadCount: 0 }
-          : user
-      ),
-    }));
+    set((state) => {
+      if (!selectedUser) {
+        return { selectedUser: null };
+      }
+
+      return {
+        selectedUser,
+        users: state.users.map((user) =>
+          user._id === selectedUser._id
+            ? { ...user, unreadCount: 0 }
+            : user
+        ),
+      };
+    });
   },
 }));
