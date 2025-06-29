@@ -10,9 +10,20 @@ export const getUsersForSidebar = async (req, res) => {
 
     const users = await User.find({ _id: { $ne: loggedInUserId } }).select("-password");
 
-    const usersWithUnread = await Promise.all(
+    const usersWithMetadata = await Promise.all(
       users.map(async (user) => {
-        const messages = await Message.find({
+        // Find the last message between user and logged-in user
+        const lastMessage = await Message.findOne({
+          $or: [
+            { senderId: user._id, receiverId: loggedInUserId },
+            { senderId: loggedInUserId, receiverId: user._id },
+          ],
+        })
+          .sort({ createdAt: -1 })
+          .limit(1);
+
+        // Find unread messages from this user to me
+        const unreadMessages = await Message.find({
           senderId: user._id,
           receiverId: loggedInUserId,
           status: "sent",
@@ -22,12 +33,18 @@ export const getUsersForSidebar = async (req, res) => {
 
         return {
           ...user.toObject(),
-          unreadCount: Math.min(messages.length, 99),
+          unreadCount: Math.min(unreadMessages.length, 99),
+          lastMessageTime: lastMessage?.createdAt || new Date(0), // Fallback: very old time
         };
       })
     );
 
-    res.status(200).json(usersWithUnread);
+    // Sort by latest message timestamp
+    const sortedUsers = usersWithMetadata.sort(
+      (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
+    );
+
+    res.status(200).json(sortedUsers);
   } catch (error) {
     console.error("Error in getUsersForSidebar: ", error.message);
     res.status(500).json({ error: "Internal server error" });
