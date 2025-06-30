@@ -52,13 +52,11 @@ export const useChatStore = create((set, get) => ({
     socket.on("newMessage", (newMessage) => {
       const { selectedUser, messages, users } = get();
 
-      // Append to messages if it's from the current chat
       if (newMessage.senderId === selectedUser?._id) {
         set({
           messages: [...messages, newMessage],
         });
       } else {
-        // Update unreadCount in users list
         set({
           users: users.map((user) =>
             user._id === newMessage.senderId
