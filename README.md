@@ -4,7 +4,7 @@ A real-time full stack chat web application with private messaging, built with *
 Welcome to the source code of Convo!
 
 ## Live Demo:
-<a href="https://convo-153s.onrender.com" style="text-decoration: none;" target="_blank">CONVO - Click here for the demo</a>
+[CONVO - Click here for the demo](https://convo-153s.onrender.com)
 
 > Note: The application is still evolving. More content and features will be available soon!
 
