@@ -12,7 +12,6 @@ export const getUsersForSidebar = async (req, res) => {
 
     const usersWithMetadata = await Promise.all(
       users.map(async (user) => {
-        // Find the last message between user and logged-in user
         const lastMessage = await Message.findOne({
           $or: [
             { senderId: user._id, receiverId: loggedInUserId },
@@ -22,7 +21,6 @@ export const getUsersForSidebar = async (req, res) => {
           .sort({ createdAt: -1 })
           .limit(1);
 
-        // Find unread messages from this user to me
         const unreadMessages = await Message.find({
           senderId: user._id,
           receiverId: loggedInUserId,
@@ -34,12 +32,11 @@ export const getUsersForSidebar = async (req, res) => {
         return {
           ...user.toObject(),
           unreadCount: Math.min(unreadMessages.length, 99),
-          lastMessageTime: lastMessage?.createdAt || new Date(0), // Fallback: very old time
+          lastMessageTime: lastMessage?.createdAt || new Date(0),
         };
       })
     );
 
-    // Sort by latest message timestamp
     const sortedUsers = usersWithMetadata.sort(
       (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
     );
@@ -78,7 +75,6 @@ export const sendMessage = async (req, res) => {
 
     let imageUrl;
     if (image) {
-      // Upload base64 image to cloudinary
       const uploadResponse = await cloudinary.uploader.upload(image);
       imageUrl = uploadResponse.secure_url;
     }
