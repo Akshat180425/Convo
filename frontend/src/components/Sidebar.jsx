@@ -64,7 +64,6 @@ const Sidebar = () => {
               )}
             </div>
 
-            {/* User info + unread badge */}
             <div className="hidden lg:flex flex-col justify-center flex-1 min-w-0">
               <div className="flex items-center justify-between">
                 <span className="font-medium truncate">{user.fullName}</span>
