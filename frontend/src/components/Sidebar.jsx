@@ -3,6 +3,8 @@ import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { Users } from "lucide-react";
+import UserAvatar from "./UserAvatar";
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
@@ -53,20 +55,31 @@ const Sidebar = () => {
               ${selectedUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : ""}
             `}
           >
-            <div className="relative mx-auto lg:mx-0">
-              <img
-                src={user.profilePic || "/avatar.png"}
-                alt={user.name}
-                className="size-12 object-cover rounded-full"
-              />
+            <Link to={`/profile/${user._id}`} className="relative mx-auto lg:mx-0 group">
+              {user.profilePic ? (
+                <img
+                  src={user.profilePic}
+                  alt={user.fullName}
+                  className="size-12 object-cover rounded-full group-hover:brightness-90 transition"
+                />
+              ) : (
+                <UserAvatar name={user.fullName} size="48px" />
+              )}
+
               {onlineUsers.includes(user._id) && (
                 <span className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-zinc-900" />
               )}
-            </div>
+            </Link>
 
+            {/* User info + unread badge */}
             <div className="hidden lg:flex flex-col justify-center flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <span className="font-medium truncate">{user.fullName}</span>
+                <Link
+                  to={`/profile/${user._id}`}
+                  className="font-medium truncate text-left hover:underline"
+                >
+                  {user.fullName}
+                </Link>
 
                 {user.unreadCount > 0 && (
                   <span className="bg-red-500 text-white text-xs font-semibold rounded-full px-2 py-0.5">
