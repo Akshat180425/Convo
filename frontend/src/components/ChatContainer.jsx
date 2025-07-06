@@ -1,11 +1,12 @@
 import { useChatStore } from "../store/useChatStore";
 import { useEffect, useRef } from "react";
-
+import UserAvatar from "./UserAvatar";
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
 import MessageSkeleton from "./skeletons/MessageSkeleton";
 import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime, formatDay } from "../lib/utils";
+import { Link } from "react-router-dom";
 
 const ChatContainer = () => {
   const {
@@ -86,18 +87,31 @@ const ChatContainer = () => {
                 className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"}`}
                 ref={messageEndRef}
               >
-                <div className="chat-image avatar">
-                  <div className="size-10 rounded-full border">
-                    <img
-                      src={
-                        message.senderId === authUser._id
-                          ? authUser.profilePic || "/avatar.png"
-                          : selectedUser.profilePic || "/avatar.png"
-                      }
-                      alt="profile pic"
-                    />
+                {message.senderId !== authUser._id ? (
+                  <Link to={`/profile/${selectedUser._id}`} className="relative mx-auto lg:mx-0 group">
+                    {selectedUser.profilePic ? (
+                      <img
+                        src={selectedUser.profilePic}
+                        alt={selectedUser.fullName}
+                        className="size-12 object-cover rounded-full group-hover:brightness-90 transition"
+                      />
+                    ) : (
+                      <UserAvatar name={selectedUser.fullName} size="48px" />
+                    )}
+                  </Link>
+                ) : (
+                  <div className="relative mx-auto lg:mx-0">
+                    {authUser.profilePic ? (
+                      <img
+                        src={authUser.profilePic}
+                        alt={authUser.fullName}
+                        className="size-12 object-cover rounded-full"
+                      />
+                    ) : (
+                      <UserAvatar name={authUser.fullName} size="48px" />
+                    )}
                   </div>
-                </div>
+                )}
 
                 <div className="chat-header mb-1">
                   <time className="text-xs opacity-50 ml-1">
