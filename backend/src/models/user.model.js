@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    status: {
+      type: String,
+      default: "Hey! I'm on Convo. Let's Chat!",
+    },
   },
   { timestamps: true }
 );
