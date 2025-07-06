@@ -5,6 +5,8 @@ import { Camera, Mail, User } from "lucide-react";
 const ProfilePage = () => {
   const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
   const [selectedImg, setSelectedImg] = useState(null);
+  const [status, setStatus] = useState(authUser?.status || "Hey! I'm on Convo. Let's chat!");
+  const [isEditingStatus, setIsEditingStatus] = useState(false);
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -21,6 +23,15 @@ const ProfilePage = () => {
     };
   };
 
+  const handleStatusUpdate = async () => {
+    try {
+      await updateProfile({ status }); // calls backend
+      setIsEditingStatus(false);
+    } catch (err) {
+      console.error("Failed to update status:", err.message);
+    }
+  };
+
   return (
     <div className="h-screen pt-20">
       <div className="max-w-2xl mx-auto p-4 py-8">
@@ -29,6 +40,8 @@ const ProfilePage = () => {
             <h1 className="text-2xl font-semibold ">Profile</h1>
             <p className="mt-2">Your profile information</p>
           </div>
+
+          {/* avatar upload section */}
 
           <div className="flex flex-col items-center gap-4">
             <div className="relative">
@@ -54,12 +67,14 @@ const ProfilePage = () => {
                   className="hidden"
                   accept="image/*"
                   onChange={handleImageUpload}
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") { setIsEditingStatus(false); setStatus(authUser?.status || ""); } } }
                   disabled={isUpdatingProfile}
                 />
               </label>
             </div>
             <p className="text-sm text-zinc-400">
-              {isUpdatingProfile ? "Uploading..." : "Click the camera icon to update your photo"}
+              {"Click the camera icon to update your photo"}
             </p>
           </div>
 
@@ -75,9 +90,33 @@ const ProfilePage = () => {
             <div className="space-y-1.5">
               <div className="text-sm text-zinc-400 flex items-center gap-2">
                 <Mail className="w-4 h-4" />
-                Email Address
+                Status
               </div>
-              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">{authUser?.email}</p>
+
+              {isEditingStatus ? (
+                <div className="flex gap-2">
+                  <input
+                    className="input input-bordered w-full"
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                  />
+                  <button
+                    className="btn btn-sm my-2 btn-primary"
+                    onClick={handleStatusUpdate}
+                    disabled={isUpdatingProfile || !status.trim()}
+                    style={{backgroundColor: "rgb(0, 100, 200)"}} 
+                  >
+                    Save
+                  </button>
+                </div>
+              ) : (
+                <div
+                  className="px-4 py-2.5 bg-base-200 rounded-lg border cursor-pointer hover:border-primary"
+                  onClick={() => setIsEditingStatus(true)}
+                >
+                  {status}
+                </div>
+              )}
             </div>
           </div>
 
@@ -89,14 +128,14 @@ const ProfilePage = () => {
                 <span>{authUser.createdAt?.split("T")[0]}</span>
               </div>
               <div className="flex items-center justify-between py-2">
-                <span>Account Status</span>
-                <span className="text-green-500">Active</span>
+                <span>Email</span>
+                <span className="text-green-500">{authUser?.email}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div> 
   );
 };
 export default ProfilePage;
