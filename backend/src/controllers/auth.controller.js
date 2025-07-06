@@ -28,6 +28,7 @@ export const signup = async (req, res) => {
     });
 
     if (newUser) {
+      // generate jwt token here
       generateToken(newUser._id, res);
       await newUser.save();
 
@@ -74,6 +75,23 @@ export const login = async (req, res) => {
   }
 };
 
+export const getUserById = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const user = await User.findById(userId).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.log("Error in getUserById:", error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 export const logout = (req, res) => {
   try {
     res.cookie("jwt", "", { maxAge: 0 });
@@ -86,23 +104,36 @@ export const logout = (req, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    const { profilePic } = req.body;
     const userId = req.user._id;
+    const { profilePic, status, fullName } = req.body;
 
-    if (!profilePic) {
-      return res.status(400).json({ message: "Profile pic is required" });
+    const updateData = {};
+
+    // ✅ Optional Profile Pic
+    if (profilePic) {
+      const uploadResponse = await cloudinary.uploader.upload(profilePic);
+      updateData.profilePic = uploadResponse.secure_url;
     }
 
-    const uploadResponse = await cloudinary.uploader.upload(profilePic);
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { profilePic: uploadResponse.secure_url },
-      { new: true }
-    );
+    // ✅ Optional Status
+    if (typeof status === "string") {
+      updateData.status = status;
+    }
 
+    // ✅ Optional Full Name
+    if (typeof fullName === "string") {
+      updateData.fullName = fullName;
+    }
+
+    // ❌ No valid data
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({ message: "No valid fields provided for update." });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
     res.status(200).json(updatedUser);
   } catch (error) {
-    console.log("error in update profile:", error);
+    console.log("Error in updateProfile:", error.message);
     res.status(500).json({ message: "Internal server error" });
   }
 };
