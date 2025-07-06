@@ -1,5 +1,5 @@
 import { useChatStore } from "../store/useChatStore";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import UserAvatar from "./UserAvatar";
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
@@ -7,6 +7,7 @@ import MessageSkeleton from "./skeletons/MessageSkeleton";
 import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime, formatDay } from "../lib/utils";
 import { Link } from "react-router-dom";
+import ImageModel from "./ImageModel";
 
 const ChatContainer = () => {
   const {
@@ -19,6 +20,7 @@ const ChatContainer = () => {
   } = useChatStore();
 
   const { authUser, socket } = useAuthStore();
+  const [fullImageSrc, setFullImageSrc] = useState(null);
   const messageEndRef = useRef(null);
 
   useEffect(() => {
@@ -50,6 +52,17 @@ const ChatContainer = () => {
       });
     }
   }, [messages, selectedUser, socket]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setFullImageSrc(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   if (isMessagesLoading) {
     return (
@@ -124,7 +137,8 @@ const ChatContainer = () => {
                     <img
                       src={message.image}
                       alt="Attachment"
-                      className="sm:max-w-[200px] rounded-md mb-2"
+                      className="sm:max-w-[200px] rounded-md mb-2 cursor-pointer hover:opacity-80 transition"
+                      onClick={() => setFullImageSrc(message.image)}
                     />
                   )}
                   {message.text && <p>{message.text}</p>}
@@ -141,6 +155,10 @@ const ChatContainer = () => {
       </div>
 
       <MessageInput />
+
+      {fullImageSrc && (
+        <ImageModel src={fullImageSrc} onClose={() => setFullImageSrc(null)} />
+      )}
     </div>
   );
 };
