@@ -22,17 +22,17 @@ Users can register or log in using a beautiful, responsive User interface.
 
 Customize your experience by choosing from 32 unique themes using **DaisyUI**. The theme is applied globally and enhances both aesthetics and accessibility.
 
-![Login Page](./Screenshots/Settings%20Page.png)
+![Settings Page](./Screenshots/Settings%20Page.png)
 
 - HOME PAGE:
 
 Once logged in, users are directed to the Home Page. Here, they can see all contacts and online users. Until a chat is selected, the chat area remains inactive.
 
-![Login Page](./Screenshots/Home%20Page%20-%20No%20Chat%20Selected.png)
+![Home Page](./Screenshots/Home%20Page%20-%20No%20Chat%20Selected.png)
 
 Upon selecting a user, the chat container opens where users can chat or even share images with the selected user.
 
-![Login Page](./Screenshots/Home%20Page%20-%20Chat%20Container.png)
+![Chat Container Page](./Screenshots/Home%20Page%20-%20Chat%20Container.png)
 
 ## Features:
 
