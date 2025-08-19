@@ -38,7 +38,7 @@ Upon selecting a user, the chat container opens where users can chat or even sha
 
 - JWT Based Authentication
 - Real-time messaging with **Socket.IO**
-- Indicator for read messages
+- Read Receipts
 - Date separators for messages
 - Image sharing with **Cloudinary**
 - Fully responsive design
