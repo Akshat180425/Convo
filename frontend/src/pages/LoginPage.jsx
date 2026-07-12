@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import AuthImagePattern from "../components/AuthImagePattern";
 import { useThemeStore } from "../store/useThemeStore";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
+import GoogleSignInButton from "../components/GoogleSignInButton";
 
 const darkThemes = [
   "dark", "synthwave", "halloween", "forest", "aqua", "black",
@@ -12,21 +13,27 @@ const darkThemes = [
 
 const LoginPage = () => {
 
+  const navigate = useNavigate();
   const { theme } = useThemeStore();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const { login, isLoggingIn } = useAuthStore();
+  const { authUser, login, isLoggingIn } = useAuthStore();
 
   const logoSrc = darkThemes.includes(theme?.toLowerCase())
     ? "/Logo/Transparent_NoName.png"
     : "/Logo/Transparent_NoName_Light.png";
 
+  useEffect(() => {
+    if (authUser) navigate("/", { replace: true });
+  }, [authUser, navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    login(formData);
+    const success = await login(formData);
+    if (success) navigate("/", { replace: true });
   };
 
   return (
@@ -108,6 +115,20 @@ const LoginPage = () => {
               )}
             </button>
           </form>
+
+          <div className="text-center">
+            <Link to="/forgot-password" className="link link-primary text-sm">
+              Forgot password?
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="h-px flex-1 bg-base-300" />
+            <span className="text-xs uppercase text-base-content/50">or</span>
+            <div className="h-px flex-1 bg-base-300" />
+          </div>
+
+          <GoogleSignInButton />
 
           <div className="text-center">
             <p className="text-base-content/60">
