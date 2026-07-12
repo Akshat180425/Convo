@@ -27,6 +27,49 @@ export const formatDay = (dateStr) => {
   });
 };
 
+export const formatLastSeen = (dateStr) => {
+  if (!dateStr) return "Offline";
+
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diffMs = now - date;
+  const diffMinutes = Math.floor(diffMs / 60000);
+
+  if (diffMinutes < 1) return "Last seen just now";
+  if (diffMinutes < 60) return `Last seen ${diffMinutes}m ago`;
+
+  const diffHours = Math.floor(diffMinutes / 60);
+  if (diffHours < 24) return `Last seen ${diffHours}h ago`;
+
+  return `Last seen ${date.toLocaleDateString(undefined, {
+    day: "numeric",
+    month: "short",
+  })}`;
+};
+
+export const formatFileSize = (bytes = 0) => {
+  const size = Number(bytes) || 0;
+  if (size <= 0) return "";
+
+  const units = ["B", "KB", "MB", "GB"];
+  const index = Math.min(Math.floor(Math.log(size) / Math.log(1024)), units.length - 1);
+  const value = size / 1024 ** index;
+
+  return `${value >= 10 || index === 0 ? value.toFixed(0) : value.toFixed(1)} ${units[index]}`;
+};
+
+export const getFileDownloadUrl = (file = {}) => {
+  const url = file.downloadUrl || file.url || "";
+  if (!url || file.downloadUrl || !url.includes("/upload/")) return url;
+
+  return url.replace("/upload/", "/upload/fl_attachment/");
+};
+
+const API_BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:5001/api" : "/api";
+
+export const getMessageFileDownloadUrl = (messageId) =>
+  `${API_BASE_URL}/messages/files/${messageId}/download`;
+
 export const getInitials = (name = "") => {
   const names = name.trim().split(" ");
   if (names.length === 0) return "";
