@@ -3,7 +3,7 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import cloudinary from "../lib/cloudinary.js";
 import crypto from "crypto";
-import { sendPasswordResetEmail, sendVerificationEmail } from "../lib/email.js";
+import { isEmailSendError, sendPasswordResetEmail, sendVerificationEmail } from "../lib/email.js";
 import {
   getPrivacySettings,
   normalizePrivacyUpdate,
@@ -367,7 +367,22 @@ export const forgotPassword = async (req, res) => {
     user.passwordResetExpires = new Date(Date.now() + CODE_EXPIRY_MS);
     await user.save();
 
-    await sendPasswordResetEmail({ to: normalizedEmail, code: resetCode });
+    try {
+      await sendPasswordResetEmail({ to: normalizedEmail, code: resetCode });
+    } catch (error) {
+      user.passwordResetCode = "";
+      user.passwordResetExpires = null;
+      await user.save();
+
+      if (isEmailSendError(error)) {
+        return res.status(502).json({
+          message: "Could not send the reset email. Please try again later.",
+        });
+      }
+
+      throw error;
+    }
+
     console.log(`Password reset code sent to ${normalizedEmail}`);
 
     res.status(200).json({ message: "Password reset code sent to your email" });
