@@ -1,13 +1,17 @@
+import { useState } from "react";
 import { getInitials, getColorFromName } from "../lib/utils";
 
 const UserAvatar = ({ name, profilePic, size = "48px" }) => {
-  if (profilePic) {
+  const [imageFailed, setImageFailed] = useState(false);
+
+  if (profilePic && !imageFailed) {
     return (
       <img
         src={profilePic}
         alt={name}
         className="rounded-full object-cover"
         style={{ width: size, height: size }}
+        onError={() => setImageFailed(true)}
       />
     );
   }
