@@ -17,6 +17,19 @@ const {
 
 const hasSmtpConfig = SMTP_HOST && SMTP_PORT && SMTP_USER && SMTP_PASS;
 
+class EmailSendError extends Error {
+  constructor(message, cause) {
+    super(message);
+    this.name = "EmailSendError";
+    this.cause = cause;
+    this.code = cause?.code;
+    this.command = cause?.command;
+    this.responseCode = cause?.responseCode;
+  }
+}
+
+export const isEmailSendError = (error) => error?.name === "EmailSendError";
+
 const transporter = hasSmtpConfig
   ? nodemailer.createTransport({
       host: SMTP_HOST,
@@ -55,16 +68,28 @@ const sendEmail = async ({ to, subject, text, html, attachments = [] }) => {
     throw new Error("Email service is not configured");
   }
 
-  await withEmailTimeout(
-    transporter.sendMail({
-      from: SMTP_FROM || SMTP_USER,
-      to,
+  try {
+    await withEmailTimeout(
+      transporter.sendMail({
+        from: SMTP_FROM || SMTP_USER,
+        to,
+        subject,
+        text,
+        html,
+        attachments,
+      })
+    );
+  } catch (error) {
+    console.error("Email send failed:", {
       subject,
-      text,
-      html,
-      attachments,
-    })
-  );
+      to,
+      code: error?.code,
+      command: error?.command,
+      responseCode: error?.responseCode,
+      message: error?.message,
+    });
+    throw new EmailSendError("Email delivery failed", error);
+  }
 };
 
 export const sendVerificationEmail = async ({ to, code }) => {
