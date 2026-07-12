@@ -1,6 +1,7 @@
 import { THEMES } from "../constants";
 import { useThemeStore } from "../store/useThemeStore";
-import { Send } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft, Send, User } from "lucide-react";
 
 const PREVIEW_MESSAGES = [
   { id: 1, content: "Hey! How's it going?", isSent: false },
@@ -8,15 +9,53 @@ const PREVIEW_MESSAGES = [
 ];
 
 const SettingsPage = () => {
+  const navigate = useNavigate();
   const { theme, setTheme } = useThemeStore();
 
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
+  };
+
   return (
-    <div className="h-screen container mx-auto px-4 pt-20 max-w-5xl">
+    <div className="min-h-screen bg-base-100 text-base-content">
+      <div className="container mx-auto max-w-5xl px-4 pb-16 pt-20">
       <div className="space-y-6">
-        <div className="flex flex-col gap-1">
-          <h2 className="text-lg font-semibold">Theme</h2>
-          <p className="text-sm text-base-content/70">Choose a theme for your chat interface</p>
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-lg font-semibold">Theme</h2>
+            <p className="text-sm text-base-content/70">Choose a theme for your chat interface</p>
+          </div>
+          <button
+            type="button"
+            onClick={handleBack}
+            className="btn btn-ghost btn-sm gap-2"
+          >
+            <ArrowLeft className="size-4" />
+            Back
+          </button>
         </div>
+
+        <button
+          type="button"
+          onClick={() => navigate("/profile")}
+          className="flex w-full items-center justify-between rounded-lg border border-base-300 bg-base-200 px-4 py-3 text-left transition hover:bg-base-300"
+        >
+          <span className="flex min-w-0 items-center gap-3">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <User className="size-4" />
+            </span>
+            <span className="min-w-0">
+              <span className="block font-medium">Profile</span>
+              <span className="block truncate text-sm text-base-content/60">
+                Manage profile details and privacy options
+              </span>
+            </span>
+          </span>
+        </button>
 
         <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
           {THEMES.map((t) => (
@@ -48,19 +87,22 @@ const SettingsPage = () => {
         <div className="rounded-xl border border-base-300 overflow-hidden bg-base-100 shadow-lg">
           <div className="p-4 bg-base-200">
             <div className="max-w-lg mx-auto">
+              {/* Mock Chat UI */}
               <div className="bg-base-100 rounded-xl shadow-sm overflow-hidden">
+                {/* Chat Header */}
                 <div className="px-4 py-3 border-b border-base-300 bg-base-100">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-content font-medium">
                       J
                     </div>
                     <div>
-                      <h3 className="font-medium text-sm">John Doe</h3>
+                      <h3 className="font-medium text-sm">John</h3>
                       <p className="text-xs text-base-content/70">Online</p>
                     </div>
                   </div>
                 </div>
 
+                {/* Chat Messages */}
                 <div className="p-4 space-y-4 min-h-[200px] max-h-[200px] overflow-y-auto bg-base-100">
                   {PREVIEW_MESSAGES.map((message) => (
                     <div
@@ -87,6 +129,7 @@ const SettingsPage = () => {
                   ))}
                 </div>
 
+                {/* Chat Input */}
                 <div className="p-4 border-t border-base-300 bg-base-100">
                   <div className="flex gap-2">
                     <input
@@ -105,6 +148,7 @@ const SettingsPage = () => {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
