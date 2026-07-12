@@ -1,9 +1,12 @@
 import Navbar from "./components/Navbar";
 import UserProfilePage from "./components/UserProfilePage";
+import GroupProfilePage from "./components/GroupProfilePage";
+import KeyboardShortcuts from "./components/KeyboardShortcuts";
 
 import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import SettingsPage from "./pages/SettingsPage";
 import ProfilePage from "./pages/ProfilePage";
 
@@ -42,10 +45,14 @@ const App = () => {
         <Route path="/" element={authUser ? <HomePage /> : <Navigate to="/login" />} />
         <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/" />} />
         <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
+        <Route path="/forgot-password" element={!authUser ? <ForgotPasswordPage /> : <Navigate to="/" />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
         <Route path="/profile/:id" element={<UserProfilePage />} />
+        <Route path="/group/:id" element={authUser ? <GroupProfilePage /> : <Navigate to="/login" />} />
       </Routes>
+
+      <KeyboardShortcuts />
 
       <Toaster />
     </div>
