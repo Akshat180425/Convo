@@ -11,6 +11,7 @@ const {
   SMTP_PASS,
   SMTP_FROM,
   REPORT_REVIEW_EMAIL,
+  EMAIL_SEND_TIMEOUT_MS,
   NODE_ENV,
 } = process.env;
 
@@ -25,8 +26,24 @@ const transporter = hasSmtpConfig
         user: SMTP_USER,
         pass: SMTP_PASS,
       },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 20000,
     })
   : null;
+
+const withEmailTimeout = (promise) => {
+  const timeoutMs = Number(EMAIL_SEND_TIMEOUT_MS) || 25000;
+  let timeoutId;
+
+  const timeout = new Promise((_, reject) => {
+    timeoutId = setTimeout(() => {
+      reject(new Error("Email request timed out"));
+    }, timeoutMs);
+  });
+
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timeoutId));
+};
 
 const sendEmail = async ({ to, subject, text, html, attachments = [] }) => {
   if (!transporter) {
@@ -38,14 +55,16 @@ const sendEmail = async ({ to, subject, text, html, attachments = [] }) => {
     throw new Error("Email service is not configured");
   }
 
-  await transporter.sendMail({
-    from: SMTP_FROM || SMTP_USER,
-    to,
-    subject,
-    text,
-    html,
-    attachments,
-  });
+  await withEmailTimeout(
+    transporter.sendMail({
+      from: SMTP_FROM || SMTP_USER,
+      to,
+      subject,
+      text,
+      html,
+      attachments,
+    })
+  );
 };
 
 export const sendVerificationEmail = async ({ to, code }) => {
