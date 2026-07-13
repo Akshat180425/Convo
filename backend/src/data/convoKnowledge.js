@@ -7,6 +7,27 @@ export const convoKnowledgeBase = [
       "Convo has four main sidebar tabs: Friends, Groups, Requests, and Add. The tab names are shown as hover tooltips on the icons. Friends shows accepted friends, self-chat, favorite chats, and Convo AI. Groups shows group chats and group creation. Requests shows incoming and outgoing friend requests. Add lets users discover people and send friend requests.",
   },
   {
+    id: "screen_layout",
+    title: "Screen Layout",
+    keywords: ["screen", "layout", "where", "position", "located", "left", "right", "top", "bottom", "sidebar", "chat area"],
+    content:
+      "Convo is arranged as a two-panel chat app. The sidebar is on the left and contains the app title, total unread count, tab icons, search, chat lists, group creation controls, and friend request tools depending on the active tab. The main chat area is on the right. When a chat is open, the chat header is at the top of the main area, the message history is in the middle, and the message composer is fixed at the bottom of the chat area. When no chat is selected, the right side shows the home/starred messages view.",
+  },
+  {
+    id: "top_right_navigation",
+    title: "Top-Right App Navigation",
+    keywords: ["top right", "settings", "profile", "logout", "navbar", "account", "theme", "where is settings", "where is profile"],
+    content:
+      "Global account controls are in the top-right area of the app header/navigation. The Profile entry opens the signed-in user's own profile page. The Settings entry opens theme and appearance settings. The Logout control is also in this top navigation area. If a user asks where to change their profile, status, profile picture, theme, or account options, guide them to the top-right Profile or Settings controls.",
+  },
+  {
+    id: "sidebar_layout",
+    title: "Sidebar Layout",
+    keywords: ["sidebar", "left", "tabs", "friends tab", "groups tab", "requests tab", "add tab", "search", "chat list", "unread"],
+    content:
+      "The left sidebar is the main navigation column. Near the top of the sidebar, Convo shows the Chats heading with the total unread count. Under it are the four icon-only tabs: Friends, Groups, Requests, and Add. Their names appear on hover. Below the tabs is the search box for the current list. The Friends tab list includes self-chat, Convo AI, favorite chats, and accepted friends. The Groups tab lists group chats and includes group creation controls. Unread counts for direct chats are associated with the Friends tab, unread group messages are associated with the Groups tab, and the total unread count appears near the Chats heading.",
+  },
+  {
     id: "friends_requests",
     title: "Friend Requests",
     keywords: ["friend", "friends", "request", "requests", "accept", "reject", "add", "discover", "message"],
@@ -23,9 +44,16 @@ export const convoKnowledgeBase = [
   {
     id: "chat_header",
     title: "Chat Header Actions",
-    keywords: ["header", "block", "media", "button", "profile", "name", "chat name"],
+    keywords: ["header", "top bar", "top", "block", "media", "button", "profile", "name", "chat name", "shared media", "where is media"],
     content:
-      "In an individual chat header, clicking the user's name or avatar opens that user's profile. The header also has icon-only buttons for blocking or unblocking the user and for opening the media collection. Button labels appear through hover tooltips.",
+      "The chat header is the top bar of the main chat area. On the left side of that header are the selected chat's avatar and name. Clicking the user's name/avatar opens that user's profile, and clicking a group name/avatar opens the Group Profile. On the right side of an individual chat header are icon-only buttons such as Media and Block/Unblock. The Media button opens the shared media collection for the current chat. Button labels appear through hover tooltips.",
+  },
+  {
+    id: "chat_area_layout",
+    title: "Chat Area Layout",
+    keywords: ["chat area", "message area", "message history", "typing box", "composer", "input", "bottom", "top bar", "middle"],
+    content:
+      "Inside an open chat, the selected chat's header stays at the top of the chat area. Messages appear below it in the scrollable middle section. The message composer is at the bottom of the chat area, with attachment controls, audio recording controls, the text field, AI suggestions when available, and the send button. The chat area is separate from the left sidebar, so app-wide navigation happens on the left while conversation actions happen in the top and bottom parts of the right panel.",
   },
   {
     id: "sending_messages",
@@ -44,9 +72,9 @@ export const convoKnowledgeBase = [
   {
     id: "message_actions",
     title: "Message Actions",
-    keywords: ["message", "actions", "hover", "star", "pin", "reply", "edit", "delete", "everyone", "yourself"],
+    keywords: ["message", "actions", "hover", "star", "pin", "reply", "edit", "delete", "everyone", "yourself", "beside message", "right of message"],
     content:
-      "Message action buttons appear only when hovering over the message area. They are positioned above the message bubble and below the timestamp area. Users can star, pin, reply to, and delete messages. Senders can edit their own text messages and delete their own messages for everyone. Any participant can delete a message for themselves.",
+      "Message action buttons appear only when hovering within the horizontal band of that message in the chat area. The buttons sit beside the message bubble: on the left side of the user's own sent messages and on the right side of received messages. Users can star, pin, reply to, forward, report, and delete messages. Senders can edit their own text messages and delete their own messages for everyone. Any participant can delete a message for themselves.",
   },
   {
     id: "deleted_messages",
@@ -72,9 +100,9 @@ export const convoKnowledgeBase = [
   {
     id: "media_collection",
     title: "Media Collection",
-    keywords: ["media", "collection", "photos", "videos", "audios", "audio", "files", "file", "document", "links", "image", "zoom"],
+    keywords: ["media", "collection", "shared media", "top bar", "chat header", "photos", "videos", "audios", "audio", "files", "file", "document", "links", "image", "zoom"],
     content:
-      "The media collection opens from the media button in the chat header. It has sections for Photos, Videos, Audios, Files, and Links. Photos are image messages from the current chat. Audios are recorded audio messages from the current chat. Files are document/file attachments shared in the current chat. Links are detected from message text. Clicking a photo opens it in a zoomed image view inside the media modal, with a back option to return to the collection.",
+      "The media collection opens from the Media button in the top bar of the current chat, on the right side of the chat header. It has sections for Photos, Videos, Audios, Files, and Links. Photos are image messages from the current chat. Audios are recorded audio messages from the current chat. Files are document/file attachments shared in the current chat. Links are detected from message text. Clicking a photo opens it in a zoomed image view inside the media modal, with a back option to return to the collection.",
   },
   {
     id: "audio_messages",
@@ -93,9 +121,9 @@ export const convoKnowledgeBase = [
   {
     id: "group_profile",
     title: "Group Profile",
-    keywords: ["group profile", "group name", "details", "created", "members", "member count", "group image", "scroll"],
+    keywords: ["group profile", "group name", "details", "created", "members", "member count", "group image", "scroll", "where is group profile"],
     content:
-      "Clicking a group name or group avatar opens the Group Profile. It shows the group image, name, details, Group info, Created on date, and Number of Members. Clicking the member count expands the member list. The profile content can scroll so the member list can be browsed without losing access to the upper group details.",
+      "Clicking the group name or group avatar in the top chat header opens the Group Profile. It shows the group image near the top, followed by the group name, details, Group info, Created on date, and Number of Members. Clicking the member count expands the member list below the group info. The profile content can scroll so the member list can be browsed without losing access to the upper group details.",
   },
   {
     id: "group_editing",
@@ -121,9 +149,9 @@ export const convoKnowledgeBase = [
   {
     id: "user_profile",
     title: "User Profile",
-    keywords: ["user profile", "profile", "status", "account info", "image", "avatar"],
+    keywords: ["user profile", "profile", "status", "account info", "image", "avatar", "where is profile", "top right"],
     content:
-      "A user profile shows the user's profile image or initials fallback, full name, status, and Account Info such as email and account creation date. Users can edit their own name, status, and profile image from their own profile page.",
+      "A user profile shows the user's profile image or initials fallback, full name, status, and Account Info such as email and account creation date. Users can edit their own name, status, and profile image from their own profile page. The signed-in user's own profile is opened from the top-right Profile control. Another user's profile opens by clicking that user's name or avatar in a chat header, friend list, member list, or other linked user reference.",
   },
   {
     id: "presence",
@@ -135,9 +163,9 @@ export const convoKnowledgeBase = [
   {
     id: "settings",
     title: "Settings",
-    keywords: ["settings", "theme", "themes", "back", "appearance"],
+    keywords: ["settings", "theme", "themes", "back", "appearance", "top right", "where is settings"],
     content:
-      "The Settings page lets users change the app theme. The Settings page has a back option so users can return after changing settings.",
+      "The Settings page opens from the top-right Settings control in the app header/navigation. It lets users change the app theme and preview the appearance. The Settings page has a back option so users can return after changing settings.",
   },
   {
     id: "keyboard_shortcuts",
