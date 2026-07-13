@@ -716,30 +716,28 @@ const ChatContainer = () => {
                 </div>
               )}
 
-              <div className={`group/message flex items-start gap-2 ${isMine ? "justify-end" : "justify-start"}`}>
-                {!isMine ? (
-                  isGroupedWithPrevious ? (
-                    <div className="size-12 shrink-0" aria-hidden="true" />
-                  ) : isAiMessage ? (
-                    <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <div className={`group/message relative flex ${isMine ? "justify-end" : "justify-start"}`}>
+                {!isGroupedWithPrevious && !isMine && (
+                  isAiMessage ? (
+                    <div className="absolute left-0 top-0 flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
                       <Bot className="size-6" />
                     </div>
                   ) : (
-                  <Link to={profilePath} className="relative shrink-0 group">
-                    <UserAvatar name={senderName} profilePic={senderProfilePic} size="48px" />
-                  </Link>
+                    <Link to={profilePath} className="absolute left-0 top-0 group">
+                      <UserAvatar name={senderName} profilePic={senderProfilePic} size="48px" />
+                    </Link>
                   )
-                ) : isGroupedWithPrevious ? (
-                  <div className="order-2 size-12 shrink-0" aria-hidden="true" />
-                ) : (
-                  <div className="relative order-2 shrink-0">
+                )}
+
+                {!isGroupedWithPrevious && isMine && (
+                  <div className="absolute right-0 top-0">
                     <UserAvatar name={authUser.fullName} profilePic={authUser.profilePic} size="48px" />
                   </div>
                 )}
 
                 <div
-                  className={`flex w-fit max-w-[85%] flex-col sm:max-w-[70%] ${
-                    isMine ? "items-end" : "items-start"
+                  className={`flex w-fit max-w-[calc(85%-3.5rem)] flex-col sm:max-w-[calc(70%-3.5rem)] ${
+                    isMine ? "mr-14 items-end" : "ml-14 items-start"
                   }`}
                 >
                   {!isGroupedWithPrevious && selectedUser.isGroup && !isMine && !isAiMessage && (
