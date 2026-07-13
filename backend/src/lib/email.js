@@ -39,6 +39,10 @@ const transporter = hasSmtpConfig
         user: SMTP_USER,
         pass: SMTP_PASS,
       },
+      family: 4,
+      tls: {
+        servername: SMTP_HOST,
+      },
       connectionTimeout: 10000,
       greetingTimeout: 10000,
       socketTimeout: 20000,
